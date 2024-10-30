@@ -525,8 +525,23 @@ function extractEmails(str) {
  *    => 'NOPQRSTUVWXYZABCDEFGHIJKLMnopqrstuvwxyzabcdefghijklm'
  *
  */
-function encodeToRot13(/* str */) {
-  throw new Error('Not implemented');
+function encodeToRot13(str) {
+  const ROT13_INPUT = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+  const ROT13_OUTPUT = 'NOPQRSTUVWXYZABCDEFGHIJKLMnopqrstuvwxyzabcdefghijklm';
+
+  let result = '';
+
+  str.split('').forEach((symbol) => {
+    const letterIndex = ROT13_INPUT.indexOf(symbol);
+
+    if (letterIndex !== -1) {
+      result += ROT13_OUTPUT[letterIndex];
+    } else {
+      result += symbol;
+    }
+  });
+
+  return result;
 }
 
 /**
@@ -553,8 +568,31 @@ function encodeToRot13(/* str */) {
  *   'Q♠' => 50
  *   'K♠' => 51
  */
-function getCardId(/* value */) {
-  throw new Error('Not implemented');
+function getCardId(value) {
+  const CARD_INDEXES = [
+    {
+      A: 0,
+      J: 10,
+      Q: 11,
+      K: 12,
+    },
+    {
+      '♣': 0,
+      '♦': 52 / 4,
+      '♥': (52 / 4) * 2,
+      '♠': (52 / 4) * 3,
+    },
+  ];
+
+  let cardId = 0;
+
+  if (Number.isInteger(+value[0])) {
+    cardId = +(value.toString().slice(0, -1) - 1);
+  } else {
+    cardId = CARD_INDEXES[0][value[0]];
+  }
+
+  return cardId + CARD_INDEXES[1][value[value.length - 1]];
 }
 
 module.exports = {
